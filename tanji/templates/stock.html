@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="mt-4">STCOK INFO</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active">觀測各股資訊</li>
+    </ol>
+</div>
+
+<div class="container-fluid">
+
+    <br>
+    <form action="#" method="post">
+        <div class="form-row align-items-center">
+        <h2>股票代碼</h2>&nbsp&nbsp
+          <div class="col-auto">
+            <label class="sr-only" for="stock_no">Name</label>
+            <input type="text" class="form-control mb-2" id="stock_no" name="stock_no" placeholder="2330 台積電">
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary mb-2">送出</button>
+          </div>
+        </div>
+      </form>
+      <br>
+
+    {{ans.stock_name}}
+
+</div>
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-xl-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    {{stock_no}}
+                </div>
+                <!-- <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div> -->
+                <div class="card-body">
+                    <p>基本資料</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-chart-bar mr-1"></i>
+                    Bar Chart Example
+                </div>
+                <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+<!-- <div id="container" >圖表載入中...</div> -->
+
+<script src="https://code.highcharts.com.cn/jquery/jquery-1.8.3.min.js"></script>
+<script src="https://code.highcharts.com.cn/highstock/highstock.js"></script>
+<script src="https://code.highcharts.com.cn/highcharts/modules/exporting.js"></script>
+<script src="https://code.highcharts.com.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+<script src="https://code.highcharts.com.cn/highcharts/modules/drag-panes.js"></script>
+
+
+
+<script>
+    Highcharts.setOptions({
+		lang: {
+				rangeSelectorZoom: ''
+		}
+});
+$.getJSON('https://data.jianshukeji.com/stock/history/000001', function (data) {
+		if(data.code !== 1) {
+				alert('讀取數據失敗！');
+				return false;
+		}
+		data = data.data;
+		var ohlc = [],
+				volume = [],
+				dataLength = data.length,
+				// set the allowed units for data grouping
+				groupingUnits = [[
+						'week',                         // unit name
+						[1]                             // allowed multiples
+				], [
+						'month',
+						[1, 2, 3, 4, 6]
+				]],
+				i = 0;
+		for (i; i < dataLength; i += 1) {
+				ohlc.push([
+						data[i][0], // the date
+						data[i][1], // open
+						data[i][2], // high
+						data[i][3], // low
+						data[i][4] // close
+				]);
+				volume.push([
+						data[i][0], // the date
+						data[i][5] // the volume
+				]);
+		}
+		// create the chart
+		var chart = Highcharts.stockChart('container', {
+				rangeSelector: {
+						selected: 1,
+						inputDateFormat: '%Y-%m-%d'
+				},
+				title: {
+						text: '平安银行历史股价'
+				},
+				xAxis: {
+						dateTimeLabelFormats: {
+								millisecond: '%H:%M:%S.%L',
+								second: '%H:%M:%S',
+								minute: '%H:%M',
+								hour: '%H:%M',
+								day: '%m-%d',
+								week: '%m-%d',
+								month: '%y-%m',
+								year: '%Y'
+						}
+				},
+				tooltip: {
+						split: false,
+						shared: true,
+				},
+				yAxis: [{
+						labels: {
+								align: 'right',
+								x: -3
+						},
+						title: {
+								text: '股價'
+						},
+						height: '65%',
+						resize: {
+								enabled: true
+						},
+						lineWidth: 2
+				}, {
+						labels: {
+								align: 'right',
+								x: -3
+						},
+						title: {
+								text: '成交量'
+						},
+						top: '65%',
+						height: '35%',
+						offset: 0,
+						lineWidth: 2
+				}],
+				series: [{
+						type: 'candlestick',
+						name: '平安银行',
+						color: 'green',
+						lineColor: 'green',
+						upColor: 'red',
+						upLineColor: 'red',
+						tooltip: {
+						},
+						navigatorOptions: {
+								color: Highcharts.getOptions().colors[0]
+						},
+						data: ohlc,
+						dataGrouping: {
+								units: groupingUnits
+						},
+						id: 'sz'
+				},{
+						type: 'column',
+						data: volume,
+						yAxis: 1,
+						dataGrouping: {
+								units: groupingUnits
+						}
+				}]
+		});
+});
+</script>
+
+
+
+
+
+
+{% endblock %}
