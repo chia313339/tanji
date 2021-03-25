@@ -16,7 +16,7 @@
         <h2>股票代碼</h2>&nbsp&nbsp
           <div class="col-auto">
             <label class="sr-only" for="stock_no">Name</label>
-            <input type="text" class="form-control mb-2" id="stock_no" name="stock_no" placeholder="2330 台積電">
+            <input type="text" class="form-control mb-2" id="stock_no" name="stock_no" placeholder="輸入關鍵字搜尋">
           </div>
           <div class="col-auto">
             <button type="submit" class="btn btn-primary mb-2">送出</button>
@@ -25,7 +25,39 @@
       </form>
       <br>
 
-    {{ans.stock_name}}
+      <div>
+          <h3 style="color:rgb(5, 66, 66)">{{ans.stock_name}}</h3>
+      </div>
+      <div>
+        <h5 style="color:rgb(164, 182, 182)">{{ans.updated_date}}</h3>
+    </div>
+
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">收盤價</th>
+            <th scope="col">開盤價</th>
+            <th scope="col">最高價</th>
+            <th scope="col">最低價</th>
+            <th scope="col">成交量</th>
+            <th scope="col">昨日價</th>
+            <th scope="col">漲跌價</th>
+            <th scope="col">漲跌幅</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row" style="color:{{ ans.trend }}">{{ans.st_price}}</th>
+            <td>{{ans.open}}</td>
+            <td>{{ans.high}}</td>
+            <td>{{ans.low}}</td>
+            <td>{{ans.vol}}</td>
+            <td>{{ans.yd_price}}</td>
+            <td style="color:{{ ans.trend }}">{{ans.diff_price}}</td>
+            <td style="color:{{ ans.trend }}">{{ans.diff_pc}}</td>
+          </tr>
+        </tbody>
+      </table>
 
 </div>
 
@@ -35,19 +67,57 @@
         <div class="col-xl-6">
             <div class="card mb-4">
                 <div class="card-header">
-                    {{stock_no}}
+                    公司基本資料
                 </div>
                 <!-- <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div> -->
                 <div class="card-body">
-                    <p>基本資料</p>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td width="120px">名稱</td>
+                                <td>{{ans.st_allname}}</td>
+                            </tr>
+                            <tr>
+                                <td>產業別</td>
+                                <td>{{ans.st_cat}}</td>
+                            </tr>
+                            <tr>
+                                <td>上市、櫃</td>
+                                <td>{{ans.listed}}</td>
+                            </tr>
+                            <tr>
+                                <td>資本額</td>
+                                <td>{{ans.capital}}</td>
+                            </tr>
+                            <tr>
+                                <td>市值</td>
+                                <td>{{ans.m_value}}</td>
+                            </tr>
+                            <tr>
+                                <td>上市時間</td>
+                                <td>{{ans.l_date}}</td>
+                            </tr>
+                            <tr>
+                                <td>董事長</td>
+                                <td>{{ans.president}}</td>
+                            </tr>
+                            <tr>
+                                <td>總經理</td>
+                                <td>{{ans.gm}}</td>
+                            </tr>
+                            <tr>
+                                <td>主要業務</td>
+                                <td>{{ans.business}}</td>
+                            </tr>
+                          </tbody>
+                    </table>
                 </div>
             </div>
         </div>
         <div class="col-xl-6">
             <div class="card mb-4">
                 <div class="card-header">
-                    <i class="fas fa-chart-bar mr-1"></i>
-                    Bar Chart Example
+                    各股新聞
                 </div>
                 <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
             </div>

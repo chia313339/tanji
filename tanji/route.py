@@ -50,10 +50,50 @@ def stock_info(stock_no):
     headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36'  }
     res = requests.get(url, headers = headers)
     res.encoding = 'utf-8'
-    data = BeautifulSoup(res.text, 'lxml').select_one('.solid_1_padding_3_1_tbl').select('td')
+    soup = BeautifulSoup(res.text, 'lxml')
+    tmp = soup.select_one('.solid_1_padding_3_1_tbl').select('td')
+    msg_list = []
+    for msg in tmp:
+        if msg.text.find('標的')>0:
+            continue
+        msg_list.append(msg.text)
     stock_info = {
-        "stock_name":data[1].text.replace('\xa0', ' ')
+        "stock_name":msg_list[0],
+        "updated_date":msg_list[1],
+        "st_price":msg_list[10],
+        "open":msg_list[14],
+        "high":msg_list[15],
+        "low":msg_list[16],
+        "vol":msg_list[26],
+        "yd_price":msg_list[11],
+        "diff_price":msg_list[12],
+        "diff_pc":msg_list[13]
     }
+    tmp = soup.select('.solid_1_padding_4_4_tbl')[2].select('td')
+    stock_info["st_allname"]=tmp[1].text
+    stock_info["st_cat"]=tmp[3].text
+    stock_info["listed"]=tmp[5].text
+    stock_info["f_value"]= tmp[7].text
+    stock_info["capital"]=tmp[9].text
+    stock_info["m_value"]=tmp[11].text
+    stock_info["e_date"]=tmp[13].text
+    stock_info["l_date"]=tmp[15].text
+    stock_info["president"]=tmp[17].text
+    stock_info["gm"]=tmp[19].text
+    stock_info["speaker"]=tmp[21].text
+    stock_info["ag"]=tmp[23].text
+    stock_info["url"]=tmp[25].text
+    stock_info["co_bond"]=tmp[29].text
+    stock_info["private"]=tmp[31].text
+    stock_info["special"]=tmp[33].text
+    stock_info["business"]=tmp[35].text
+    if float(stock_info['st_price'])>float(stock_info['yd_price']): 
+        stock_info["trend"]='red'
+    if float(stock_info['st_price'])<float(stock_info['yd_price']):
+        stock_info["trend"]='green'
+    if float(stock_info['st_price'])==float(stock_info['yd_price']): 
+        stock_info["trend"]='black'
+    
     return stock_info
 
 
