@@ -9,7 +9,8 @@ import numpy as np
 import pandas
 import matplotlib.pyplot as plt
 import requests
-
+from fake_useragent import UserAgent
+ 
 
 
 
@@ -46,8 +47,9 @@ def logout():
 #     data = soup.select_one('#txtFinBody')
 
 def stock_info(stock_no):
+    user_agent = UserAgent()
     url = "https://goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID=%s" % (stock_no)
-    headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36'  }
+    headers = {'user-agent': user_agent.random}
     res = requests.get(url, headers = headers)
     res.encoding = 'utf-8'
     soup = BeautifulSoup(res.text, 'lxml')
@@ -97,17 +99,37 @@ def stock_info(stock_no):
     return stock_info
 
 
+def stock_news(stock_no):
+    url = 'https://tw.stock.yahoo.com/q/h?s=%s' % (stock_no)
+    headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36'  }
+    res = requests.get(url, headers = headers)
+    soup = BeautifulSoup(res.text, 'lxml')
+    tmp = soup.select('.yui-text-left')[0].select('a')
+    news_list = []
+    for news in tmp:
+        tmp_list = {
+            "title":news.text,
+            "url":'https://tw.stock.yahoo.com'+news.get('href')
+        }
+        news_list.append(tmp_list)
+    return news_list
+
+
 def stock():
     if request.method == "POST":
         stock_no = request.form["stock_no"]
         print(stock_no)
         ans = stock_info(stock_no)
+        news = stock_news(stock_no)
 
     else:
         stock_no = '2330' 
         print(stock_no)
         ans = stock_info(stock_no)
-    return render_template('stock.html',stock_no=stock_no,ans=ans)
+        news = stock_news(stock_no)
+    
+    print(news)
+    return render_template('stock.html',stock_no=stock_no,ans=ans, news=news)
 
 
 def tables():
