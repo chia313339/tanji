@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% set open_page = "stock_list" %}
+{% set active_page = "stock_list" %}
+{% block content %}
+
+
+  <div class="content-wrapper" id = "wrapper_page">
+
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-12">
+            <h1 class="m-0">台股列表</h1>
+            <p style="color: gray;">
+              計算目前台股個股的相關資訊，最後更新時間為 {{tstock_stat[0][22]}}。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.content-header -->
+
+    <div class="content">
+      <div class="container-fluid">
+
+        <div id="successAlert" class="alert alert-success" role="alert" style="display:none;"></div>
+	      <div id="errorAlert" class="alert alert-danger" role="alert" style="display:none;"></div>
+
+        <!-- 區塊一 -->
+        <!-- 撰寫區 -->
+        <div class="card card-default">
+          <div class="card-header">
+            <h2 class="card-title" style="font-weight: bold; color:#00B050;">台股清單</h2>
+            <div class="card-tools">
+              <form action="{{ url_for('get_stock_list_csv') }}">
+                <button type="submit" class="btn btn-tool">
+                  <i class="fas fa-download"></i>
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table id = "tstock_table" class="table table-bordered table-hover" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>代號</th>
+                    <th>名稱</th>
+                    <th>價格</th>
+                    <th>配息</th>
+                    <th>現金殖利率</th>
+                    <th>Q1EPS</th>
+                    <th>Q2EPS</th>
+                    <th>Q3EPS</th>
+                    <th>Q4EPS</th>
+                    <th>今年累積EPS</th>
+                    <th>去年EPS</th>
+                    <th>本益比</th>
+                    <th>股價淨值比</th>
+                    <th>近1年價位</th>
+                    <th>近2年價位</th>
+                    <th>近3年價位</th>
+                    <th>配息日</th>
+                    <th>除權日</th>
+                    <th>3年平均股利</th>
+                    <th>6年平均股利</th>
+                    <th>10年平均股利</th>
+                    <th>10年配息次數</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in tstock_stat %}
+                  <tr>
+                    <td><a  href="https://tw.stock.yahoo.com/quote/{{item[0]}}.TW" target="_blank">{{item[0]}}</a></td>
+                    <td><a  href="https://www.cmoney.tw/finance/f00025.aspx?s={{item[0]}}" target="_blank">{{item[1]}}</a></td>
+                    <td>{{item[2]}}</td>
+                    <td>{{item[3]}}</td>
+                    <td>{{item[4]}}</td>
+                    <td>{{item[5]}}</td>
+                    <td>{{item[6]}}</td>
+                    <td>{{item[7]}}</td>
+                    <td>{{item[8]}}</td>
+                    <td>{{item[9]}}</td>
+                    <td>{{item[10]}}</td>
+                    <td>{{item[11]}}</td>
+                    <td>{{item[12]}}</td>
+                    <td><a href="javascript: void(0)" onclick="fiveline_link('{{item[0]}}.TW',1)">{{item[13]}}</a></td>
+                    <td><a href="javascript: void(0)" onclick="fiveline_link('{{item[0]}}.TW',2)">{{item[14]}}</a></td>
+                    <td><a href="javascript: void(0)" onclick="fiveline_link('{{item[0]}}.TW',3)">{{item[15]}}</a></td>
+                    <td>{{item[16]}}</td>
+                    <td>{{item[17]}}</td>
+                    <td>{{item[18]}}</td>
+                    <td>{{item[19]}}</td>
+                    <td>{{item[20]}}</td>
+                    <td>{{item[21]}}</td>  
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+            
+          
+        </div>
+        
+
+        
+
+        
+        
+
+      </div>
+    </div>
+
+
+
+
+
+
+
+  </div> <!-- /.content-wrapper -->
+
+
+
+
+
+  <script>
+
+    // 轉跳五線譜畫面
+    function fiveline_link(stock_no,ys){
+      var end_dt = new Date();
+      var start_dt = new Date();
+      start_dt.setDate(start_dt .getDay()-365*ys);
+      window.open("/five_line_view/"+stock_no+"/"+start_dt.toISOString().slice(0,10)+"/"+end_dt.toISOString().slice(0,10));
+
+    };
+    
+    
+
+    $(document).ready(function(){
+
+      // 顯示datatable
+      $('#tstock_table').DataTable({
+      });
+    });
+
+
+
+
+  </script>
+
+  {% endblock %}

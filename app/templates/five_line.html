@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+{% set open_page = "five_line" %}
+{% set active_page = "five_line" %}
+{% block content %}
+
+
+  <div class="content-wrapper" id = "wrapper_page">
+
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-12">
+            <h1 class="m-0">五線譜選股</h1>
+            <p style="color: gray;">
+              可以進行美股、台股、外匯及加權指數預測，台股為代碼加上.TW(如:0050.TW)，外匯請在外幣代號後加上=x(如:TWD=X)，台灣加權指數為^TWII。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.content-header -->
+
+    <div class="content">
+      <div class="container-fluid">
+
+        <div id="successAlert" class="alert alert-success" role="alert" style="display:none;"></div>
+	      <div id="errorAlert" class="alert alert-danger" role="alert" style="display:none;"></div>
+
+        <!-- 區塊一 -->
+        <!-- 撰寫區 -->
+        <div class="card card-default">
+          <div class="card-header">
+            <h2 class="card-title" style="font-weight: bold; color:#00B050;">參數設定</h2>
+          </div>
+          <form method="POST" id="five_line_form" enctype='multipart/form-data'>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>股票代號</label>
+                    <input type="text" class="form-control" id="stock_no" name="stock_no" value={{stock_info.stock_no}} required>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>起始時間</label>
+                    <input type="date" class="form-control" name="start_date" id="start_date" value="{{stock_info.start_dt}}" required>
+                  </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                    <label>結束時間</label>
+                    <input type="date" class="form-control" name="end_date" id="end_date" value="{{stock_info.end_dt}}" required>
+                    </div>
+                  </div>
+              </div>
+              <div class="text-right">
+                <button type="submit" class="btn btn-primary" id="submit">Submit</button>
+              </div>
+            </div>
+            
+          </form>
+          
+        </div>
+        
+        <!-- 區塊二 -->
+        <!-- 資訊區 -->
+        <div class="invoice p-3 mb-3">
+          <div class="row">
+            <div class="col-12">
+              <h4 style="color:saddlebrown;">
+                {{tstock_info.stock_name}} {{stock_info.return_code}}
+                <small class="float-right" style="color: gray;">Date: {{tstock_info.update_time}}</small>
+              </h4>
+            </div>
+          </div>
+          <div class="row invoice-info">
+            <div class="col-sm-3 invoice-col">
+              <b>名稱：</b>{{tstock_info.com_name}}<br>
+              <b>產業別：</b>{{tstock_info.com_class}}<br>
+              <b>市/櫃：</b>{{tstock_info.listed}}<br>
+              <b>資本額：</b>{{tstock_info.capital}}<br>
+              <b>市值：</b>{{tstock_info.mvalue}}
+            </div>
+            <div class="col-sm-3 invoice-col">
+              <b>股利分配狀況：</b>{{tstock_info.div_stat}}<br>
+              <b>最後一次發放年度：</b>{{tstock_info.lsy_div}}<br>
+              <b>現金股利：</b>{{tstock_info.dividend}}<br>
+              <b>現金殖利率：</b>{{tstock_info.div_yield}}
+            </div>
+            <div class="col-sm-3 invoice-col">
+              <b>股價：</b>{{stock_info.stock_price}}<br>
+              <b>-2倍標準差：</b>{{stock_info.reg_m2sd}}<br>
+              <b>-1倍標準差：</b>{{stock_info.reg_m1sd}}<br>
+              <b>預測均值：</b>{{stock_info.reg_line}}<br>
+              <b>+1倍標準差：</b>{{stock_info.reg_p1sd}}<br>
+              <b>+2倍標準差：</b>{{stock_info.reg_p2sd}}
+            </div>
+            <div class="col-sm-3 invoice-col">
+              <b>判定係數R2：</b>{{stock_info.r2}}<br>
+              <b>斜率：</b>{{stock_info.slope}}<br>
+              <b>標準差：</b>{{stock_info.sd}}<br>
+              <b>評估建議：</b><br>
+              <p style="color: tomato;">{{stock_info.stock_status}}</p>
+            </div>
+            <div class="col-md-6">
+              <a href="https://tw.stock.yahoo.com/quote/{{tstock_id}}.TW" target="_blank"><button type="button" class="btn btn-warning">Yahoo 股票</button></a>&nbsp;
+              <a href="https://goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID={{tstock_id}}" target="_blank"><button type="button" class="btn btn-secondary">Goodinfo!</button></a>&nbsp;
+              <a href="https://www.cmoney.tw/finance/f00025.aspx?s={{tstock_id}}" target="_blank"><button type="button" class="btn btn-info">Cmoney</button></a>&nbsp;
+            </div>
+            
+          </div>
+          
+        </div>
+        
+
+        <!-- 區塊三 -->
+        <!-- 五線譜 -->
+        <div class="card card-default">
+          <div class="card-header">
+            <h2 class="card-title" style="font-weight: bold; color:#00B050;">五線譜圖</h2>
+          </div>
+          
+          <div class="card-body">
+            <div id="five_line_plot"  style="height:400px;">
+              
+            </div>
+          </div>
+        </div>
+
+        <!-- 區塊四 -->
+        <!-- 技術分析圖 -->
+        <div class="card card-default">
+          <div class="card-header">
+            <h2 class="card-title" style="font-weight: bold; color:#00B050;">技術分析圖</h2>
+          </div>
+          
+          <div class="card-body">
+            <div id="stock_kline_plot"  style="height:400px;">
+
+            </div>
+          </div>
+        </div>
+
+        
+
+        
+        
+
+      </div>
+    </div>
+
+
+
+
+
+
+
+  </div> <!-- /.content-wrapper -->
+
+
+
+
+
+  <script>
+    
+    $('#submit').click(function(){
+      var stock_no = $('#stock_no').val();
+      var start_dt = $('#start_date').val();
+      var end_dt = $('#end_date').val();
+      console.log(start_dt,end_dt)
+      if(stock_no===''){
+        $('#errorAlert').text("送出失敗，可能內容有誤").show();
+        $('#successAlert').hide();
+      }
+      else{
+        $('#successAlert').text("送出成功，請等待運算").show();
+        $('#errorAlert').hide();
+        $("#five_line_form").attr("action", "/five_line_view/"+stock_no+"/"+start_dt+"/"+end_dt);
+      }
+
+    });
+
+
+    $(document).ready(function(){
+      var five_line_plot = echarts.init(document.getElementById('five_line_plot'));
+      five_line_plot.setOption({{ five_plot_obj | safe }});
+      var stock_kline_plot = echarts.init(document.getElementById('stock_kline_plot'));
+      stock_kline_plot.setOption({{ kline_plot_obj | safe }});
+    });
+
+
+
+
+  </script>
+
+  {% endblock %}

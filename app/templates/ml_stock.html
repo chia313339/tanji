@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% set open_page = "ml_stock" %}
+{% set active_page = "ml_stock" %}
+{% block content %}
+
+
+  <div class="content-wrapper" id = "wrapper_page">
+
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-12">
+            <h1 class="m-0">機器學習選股</h1>
+            <p style="color: gray;">
+              AI 技術挑股票，建置中。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /.content-header -->
+
+    <div class="content">
+      <div class="container-fluid">
+
+        <div id="successAlert" class="alert alert-success" role="alert" style="display:none;"></div>
+	      <div id="errorAlert" class="alert alert-danger" role="alert" style="display:none;"></div>
+
+        <!-- 區塊一 -->
+        <!-- 撰寫區 -->
+        <!-- <div class="card card-default">
+          <div class="card-header">
+            <h2 class="card-title" style="font-weight: bold; color:#00B050;">台股清單</h2>
+            <div class="card-tools">
+              <form action="{{ url_for('get_stock_list_csv') }}">
+                <button type="submit" class="btn btn-tool">
+                  <i class="fas fa-download"></i>
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="card-body">
+
+
+          </div>
+            
+          
+        </div> -->
+        
+
+        
+
+        
+        
+
+      </div>
+    </div>
+
+
+
+
+
+
+
+  </div> <!-- /.content-wrapper -->
+
+
+
+
+
+  <script>
+
+    // 轉跳五線譜畫面
+    function fiveline_link(stock_no,ys){
+      var end_dt = new Date();
+      var start_dt = new Date();
+      start_dt.setDate(start_dt .getDay()-365*ys);
+      window.open("/five_line_view/"+stock_no+"/"+start_dt.toISOString().slice(0,10)+"/"+end_dt.toISOString().slice(0,10));
+
+    };
+    
+    
+
+    $(document).ready(function(){
+
+      // 顯示datatable
+      $('#tstock_table').DataTable({
+      });
+    });
+
+
+
+
+  </script>
+
+  {% endblock %}

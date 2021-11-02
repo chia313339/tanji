@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% set open_page = "index" %}
+{% set active_page = "index" %}
+{% block content %}
+
+
+  <div class="content-wrapper" id = "wrapper_page">
+
+
+
+    <div class="content">
+      <div class="container-fluid">
+
+        <div class="content-header">
+          <div class="container-fluid">
+            
+        </div>
+
+
+        <!-- 區塊一 -->
+        <!-- 公告 -->
+        <div class="card card-default">
+          <div class="card-header">
+            <h2 class="card-title" style="font-weight: bold; color:#00B050;">系統公告</h2>
+          </div>
+          <div class="card-body">
+            <div>
+              <p>
+                <b style="padding-right: 20px;">2021-11-01</b>&nbsp;&nbsp;
+                台股清單功能上線
+              </p>
+              <p>
+                <b style="padding-right: 20px;">2021-10-28</b>&nbsp;&nbsp;
+                五線譜選股功能上線
+              </p>
+              <p>
+                <b style="padding-right: 20px;">2021-10-11</b>&nbsp;&nbsp;
+                系統測試營運中
+              </p>
+              
+            </div>
+          </div>
+        </div>
+
+
+
+        <!-- 區塊二 -->
+        <div class="row">
+
+          <!-- 推薦台股 -->
+          <div class="col-md-6">
+            <div class="card card-default">
+              <div class="card-header">
+                <h2 class="card-title" style="font-weight: bold; color:#00B050;">推薦台股</h2>
+              </div>
+              <div class="card-body">
+                建置中
+                
+              </div>
+              <div class="card-footer" style="text-align:right;">
+                <a href="{{ url_for('stock_list') }}" style="color:#00B050;">More </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 推薦美股 -->
+          <div class="col-md-6">
+            <div class="card card-default">
+              <div class="card-header">
+                <h2 class="card-title" style="font-weight: bold; color:#00B050;">推薦美股</h2>
+              </div>
+              <div class="card-body row">
+                建置中
+
+              
+            </div>
+            <div class="card-footer" style="text-align:right;">
+                <a href="#" style="color:#00B050;">More </a>
+              </div>
+          </div>
+          
+        </div>
+
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+  </div> <!-- /.content-wrapper -->
+
+
+
+
+
+
+
+  {% endblock %}
