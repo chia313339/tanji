@@ -14,7 +14,7 @@ import sqlalchemy
 from sqlalchemy import create_engine
 
 pgdb_config={
-'host':'34.81.198.238',
+'host':'35.194.216.83',
 'port':5432,
 'user':'tanji',
 'password':'tanji',
