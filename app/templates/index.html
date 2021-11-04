@@ -54,7 +54,33 @@
                 <h2 class="card-title" style="font-weight: bold; color:#00B050;">推薦台股</h2>
               </div>
               <div class="card-body">
-                建置中
+                {% if recommed_tstock|length > 0 %}
+                  <p style="color: rgb(180, 88, 34);">目前處於低價，且公司規模、獲利、成長穩定的公司。</p>
+                {% else %}
+                  <p style="color: rgb(119, 21, 21);">目前沒有推薦的公司。</p>
+                {% endif %}
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">代號</th>
+                      <th scope="col">公司</th>
+                      <th scope="col">股價</th>
+                      <th scope="col">現金股利</th>
+                      <th scope="col">殖利率</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in recommed_tstock %}
+                    <tr>
+                      <td><a href="https://tw.stock.yahoo.com/quote/{{item[0]}}.TW" target="_blank">{{item[0]}}</a></td>
+                      <td><a href="javascript: void(0)" onclick="fiveline_link('{{item[0]}}.TW',1)">{{item[1]}}</a></td>
+                      <td>{{item[2]}}</td>
+                      <td>{{item[3]}}</td>
+                      <td>{{item[4]}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
                 
               </div>
               <div class="card-footer" style="text-align:right;">
@@ -93,12 +119,22 @@
 
 
 
+
   </div> <!-- /.content-wrapper -->
 
 
 
 
+<script>
+  // 轉跳五線譜畫面
+  function fiveline_link(stock_no,ys){
+      var end_dt = new Date();
+      var start_dt = new Date();
+      start_dt.setDate(start_dt .getDay()-365*ys);
+      window.open("/five_line_view/"+stock_no+"/"+start_dt.toISOString().slice(0,10)+"/"+end_dt.toISOString().slice(0,10));
 
+    };
+</script>
 
 
   {% endblock %}
