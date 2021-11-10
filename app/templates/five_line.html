@@ -55,6 +55,15 @@
                     </div>
                   </div>
               </div>
+              <div class="text-left">
+                <button type="button" class="btn btn-outline-primary btn-xs" style="width:50px;" onclick="start_dt_change(0.5)">0.5年</button>
+                <button type="button" class="btn btn-outline-primary btn-xs" style="width:50px;" onclick="start_dt_change(1)">1年</button>
+                <button type="button" class="btn btn-outline-primary btn-xs" style="width:50px;" onclick="start_dt_change(1.5)">1.5年</button>
+                <button type="button" class="btn btn-outline-primary btn-xs" style="width:50px;" onclick="start_dt_change(2)">2年</button>
+                <button type="button" class="btn btn-outline-primary btn-xs" style="width:50px;" onclick="start_dt_change(2.5)">2.5年</button>
+                <button type="button" class="btn btn-outline-primary btn-xs" style="width:50px;" onclick="start_dt_change(3)">3年</button>
+              </div>
+              <br>
               <div class="text-right">
                 <button type="submit" class="btn btn-primary" id="submit">Submit</button>
               </div>
@@ -164,6 +173,15 @@
 
 
   <script>
+
+
+    function start_dt_change(ys){
+      var end_dt = new Date();
+      var start_dt = new Date();
+      start_dt.setDate(start_dt.getDay()-365*ys);
+      var start_dt_n = start_dt.toISOString().slice(0,10)
+      document.getElementById("start_date").value = start_dt_n
+    };
     
     $('#submit').click(function(){
       var stock_no = $('#stock_no').val();
