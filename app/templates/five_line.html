@@ -39,19 +39,19 @@
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>股票代號</label>
-                    <input type="text" class="form-control" id="stock_no" name="stock_no" value={{stock_info.stock_no}} required>
+                    <input type="text" class="form-control" id="stock_no" name="stock_no" value={{five_line_info.stock_no}} required>
                   </div>
                 </div>
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label>起始時間</label>
-                    <input type="date" class="form-control" name="start_date" id="start_date" value="{{stock_info.start_dt}}" required>
+                    <input type="date" class="form-control" name="start_date" id="start_date" value="{{five_line_info.start_dt}}" required>
                   </div>
                 </div>
                 <div class="col-sm-4">
                     <div class="form-group">
                     <label>結束時間</label>
-                    <input type="date" class="form-control" name="end_date" id="end_date" value="{{stock_info.end_dt}}" required>
+                    <input type="date" class="form-control" name="end_date" id="end_date" value="{{five_line_info.end_dt}}" required>
                     </div>
                   </div>
               </div>
@@ -79,44 +79,51 @@
           <div class="row">
             <div class="col-12">
               <h4 style="color:saddlebrown;">
-                {{tstock_info.stock_name}} {{stock_info.return_code}}
-                <small class="float-right" style="color: gray;">Date: {{tstock_info.update_time}}</small>
+                {{stock_info.stock_name}} {{five_line_info.return_code}}
+                <small class="float-right" style="color: gray;">Date: {{stock_info.update_time}}</small>
               </h4>
             </div>
           </div>
           <div class="row invoice-info">
             <div class="col-sm-3 invoice-col">
-              <b>名稱：</b>{{tstock_info.com_name}}<br>
-              <b>產業別：</b>{{tstock_info.com_class}}<br>
-              <b>市/櫃：</b>{{tstock_info.listed}}<br>
-              <b>資本額：</b>{{tstock_info.capital}}<br>
-              <b>市值：</b>{{tstock_info.mvalue}}
+              <b>名稱：</b>{{stock_info.com_name}}<br>
+              <b>產業別：</b>{{stock_info.com_class}}<br>
+              <b>市/櫃：</b>{{stock_info.listed}}<br>
+              <b>資本額：</b>{{stock_info.capital}}<br>
+              {% if stock_class == 'TW' %}
+              <b>市值：</b>{{stock_info.mvalue}}
+              {% else %}
+              <b>業務內容：</b>{{stock_info.job}}
+              {% endif %}
             </div>
             <div class="col-sm-3 invoice-col">
-              <b>股利分配狀況：</b>{{tstock_info.div_stat}}<br>
-              <b>最後一次發放年度：</b>{{tstock_info.lsy_div}}<br>
-              <b>現金股利：</b>{{tstock_info.dividend}}<br>
-              <b>現金殖利率：</b>{{tstock_info.div_yield}}
+              {% if stock_class == 'US' %}
+              {% else %}
+              <b>股利分配狀況：</b>{{stock_info.div_stat}}<br>
+              {% endif %}
+              <b>最後一次發放年度：</b>{{stock_info.lsy_div}}<br>
+              <b>現金股利：</b>{{stock_info.dividend}}<br>
+              <b>現金殖利率：</b>{{stock_info.div_yield}}
             </div>
             <div class="col-sm-3 invoice-col">
-              <b>股價：</b>{{stock_info.stock_price}}<br>
-              <b>-2倍標準差：</b>{{stock_info.reg_m2sd}}<br>
-              <b>-1倍標準差：</b>{{stock_info.reg_m1sd}}<br>
-              <b>預測均值：</b>{{stock_info.reg_line}}<br>
-              <b>+1倍標準差：</b>{{stock_info.reg_p1sd}}<br>
-              <b>+2倍標準差：</b>{{stock_info.reg_p2sd}}
+              <b>股價：</b>{{five_line_info.stock_price}}<br>
+              <b>-2倍標準差：</b>{{five_line_info.reg_m2sd}}<br>
+              <b>-1倍標準差：</b>{{five_line_info.reg_m1sd}}<br>
+              <b>預測均值：</b>{{five_line_info.reg_line}}<br>
+              <b>+1倍標準差：</b>{{five_line_info.reg_p1sd}}<br>
+              <b>+2倍標準差：</b>{{five_line_info.reg_p2sd}}
             </div>
             <div class="col-sm-3 invoice-col">
-              <b>判定係數R2：</b>{{stock_info.r2}}<br>
-              <b>斜率：</b>{{stock_info.slope}}<br>
-              <b>標準差：</b>{{stock_info.sd}}<br>
+              <b>判定係數R2：</b>{{five_line_info.r2}}<br>
+              <b>斜率：</b>{{five_line_info.slope}}<br>
+              <b>標準差：</b>{{five_line_info.sd}}<br>
               <b>評估建議：</b><br>
-              <p style="color: tomato;">{{stock_info.stock_status}}</p>
+              <p style="color: tomato;">{{five_line_info.stock_status}}</p>
             </div>
             <div class="col-md-6">
-              <a href="https://tw.stock.yahoo.com/quote/{{tstock_id}}.TW" target="_blank"><button type="button" class="btn btn-warning">Yahoo 股票</button></a>&nbsp;
-              <a href="https://goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID={{tstock_id}}" target="_blank"><button type="button" class="btn btn-secondary">Goodinfo!</button></a>&nbsp;
-              <a href="https://www.cmoney.tw/finance/f00025.aspx?s={{tstock_id}}" target="_blank"><button type="button" class="btn btn-info">Cmoney</button></a>&nbsp;
+              <a href="https://tw.stock.yahoo.com/quote/{{stock_id}}.TW" target="_blank"><button type="button" class="btn btn-warning">Yahoo 股票</button></a>&nbsp;
+              <a href="https://goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID={{stock_id}}" target="_blank"><button type="button" class="btn btn-secondary">Goodinfo!</button></a>&nbsp;
+              <a href="https://www.cmoney.tw/finance/f00025.aspx?s={{stock_id}}" target="_blank"><button type="button" class="btn btn-info">Cmoney</button></a>&nbsp;
             </div>
             
           </div>

@@ -119,6 +119,15 @@
           </li>
 
           <li class="nav-item">
+            <a href="{{ url_for('us_stock_list') }}" class="nav-link  {{ 'active' if active_page == 'us_stock_list' else '' }}">
+              <i class="nav-icon fas fa-globe-americas"></i>
+              <p>
+                美股清單
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
             <a href="{{ url_for('five_line') }}" class="nav-link  {{ 'active' if active_page == 'five_line' else '' }}">
               <i class="nav-icon fas fa-chart-line"></i>
               <p>
@@ -168,6 +177,24 @@
               <i class="nav-icon fas fa-search-dollar"></i>
               <p>
                 Cmoney
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="https://invest.cnyes.com/usstock/detail/VTI" target="_blank" class="nav-link  {{ 'active' if active_page == 'cnyes' else '' }}">
+              <i class="nav-icon fas fa-rainbow"></i>
+              <p>
+                鉅亨網-美股
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="http://www.aastocks.com/tc/usq/quote/quote.aspx?symbol=VTI" target="_blank" class="nav-link  {{ 'active' if active_page == 'cnyes' else '' }}">
+              <i class="nav-icon fab fa-atlassian"></i>
+              <p>
+                阿思達克財經
               </p>
             </a>
           </li>

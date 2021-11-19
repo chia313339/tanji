@@ -41,3 +41,12 @@ def get_stock_list_csv():
     resp.headers["Content-Disposition"] = "attachment; filename=stock.csv"
     resp.headers["Content-Type"] = "text/csv"
     return resp
+
+def get_ustock_list_csv():
+    sqls = '''SELECT stock_no, stock_name, price, dividend, yield_, stock_status_l1y, stock_l1y_r2, stock_l1y_slope, stock_l1y_sd, stock_status_l2y, stock_status_l3y, update_time FROM public.ustock_table;'''
+    df = sql_to_df(pgdb_config,sqls)
+    df.columns = ['代號',	'名稱',	'價格',	'配息',	'現金殖利率',	'近1年價位', '回歸解釋率', '斜率', '標準差',	'近2年價位',	'近3年價位', 'update_time']
+    resp = make_response(df.to_csv(encoding='utf-8', index=False))
+    resp.headers["Content-Disposition"] = "attachment; filename=ustock.csv"
+    resp.headers["Content-Type"] = "text/csv"
+    return resp

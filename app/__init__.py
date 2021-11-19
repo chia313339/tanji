@@ -9,8 +9,11 @@ def create_app():
     app.add_url_rule('/index', 'index', index, methods=['GET', 'POST'])
     app.add_url_rule('/ml_stock', 'ml_stock', ml_stock, methods=['GET', 'POST'])
     app.add_url_rule('/stock_list', 'stock_list', stock_list, methods=['GET', 'POST'])
+    app.add_url_rule('/us_stock_list', 'us_stock_list', us_stock_list, methods=['GET', 'POST'])
     app.add_url_rule('/five_line', 'five_line', five_line, methods=['GET', 'POST'])
     app.add_url_rule('/get_stock_list_csv', 'get_stock_list_csv', get_stock_list_csv, methods=['GET', 'POST'])
+    app.add_url_rule('/get_ustock_list_csv', 'get_ustock_list_csv', get_ustock_list_csv, methods=['GET', 'POST'])
     app.add_url_rule('/five_line_view/<stock_no>/<start_dt>/<end_dt>', 'five_line_view', five_line_view, methods=['GET','POST'])
+    app.add_url_rule('/callback', 'callback', callback, methods=['POST'])
     app.register_error_handler(404, page_not_found)
     return app

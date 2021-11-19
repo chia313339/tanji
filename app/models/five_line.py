@@ -9,6 +9,7 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 from yahoo_fin.stock_info import *
+import yahoo_fin.stock_info as si
 import pyecharts.options as opts
 from pyecharts.faker import Faker
 from pyecharts.charts import Kline, Line, Bar, Grid
@@ -105,6 +106,101 @@ def get_tstock_info(tstock_id):
         'update_time':update_time
     }
     return tstock_info
+
+# 爬取美股資訊
+def get_ustock_info(ustock_id):
+    # url = "http://www.aastocks.com/tc/usq/analysis/company-fundamental/?symbol=%s" % ustock_id
+    url_info = "http://www.aastocks.com/tc/usq/analysis/company-fundamental/?symbol=%s" % ustock_id
+    user_agent = UserAgent()
+    headers = {'user-agent': user_agent.random}
+    # 獲取 html 資訊
+    # res = requests.get(url, headers = headers)
+    # res.encoding='utf-8'
+    res_info = requests.get(url_info, headers = headers)
+    res_info.encoding='utf-8'
+    if res_info.status_code == 200:
+        # tmp = BeautifulSoup(res.text, 'lxml')
+        tmp_info = BeautifulSoup(res_info.text, 'lxml')
+        # 股票名稱
+        try:
+            try:
+                stock_name = ustock_id +" "+ tmp_info.select('#cp_pLeft table td')[1].text
+            except:
+                stock_name = ustock_id +" "+ si.get_company_info(ustock_id)['Value']['longBusinessSummary'].split('.')[0]
+        except: stock_name = ""
+
+        # 公司名稱
+        try:
+            com_name = tmp_info.select('#cp_pLeft table td')[1].text
+        except:
+            com_name = ""
+        # 產業別
+        try:
+            com_class = tmp_info.select('#cp_pLeft table td')[7].text
+        except:
+            com_class = ""
+        # 種類
+        try:
+            listed = tmp_info.select('#cp_pLeft table td')[5].text
+        except:
+            listed = ""
+        # 資本額
+        try:
+            capital = tmp_info.select('#cp_pLeft table td')[3].text
+        except:
+            capital = ""
+        # 公司業務
+        try:
+            job = tmp_info.select('#cp_pLeft table td')[9].text
+        except:
+            job = ""
+        # 最後一次發放年度
+        try:
+            lsy_div = si.get_dividends(ustock_id).tail(1).index[0].year
+        except:
+            lsy_div = ""
+        # 現金股利
+        try:
+            dividend = round(sum(si.get_dividends(ustock_id).tail(10)['dividend'][si.get_dividends(ustock_id).tail(10).index.year==lsy_div]),4)
+        except:
+            dividend = ""
+        # 現金殖利率
+        try:
+            div_yield = round(float(dividend)/float(si.get_live_price(ustock_id)),4)
+        except:
+            div_yield = ""
+        # 更新時間
+        try:
+            update_time = tmp_info.select('.std-remark78')[0].text.split('最後更新日: ')[1][0:10]
+        except:
+            update_time = "無資料"
+        
+    else:
+        stock_name = ""
+        com_name = ""
+        com_class = ""
+        listed = ""
+        capital = ""
+        job = ""
+        lsy_div = ""
+        dividend = ""
+        div_yield = ""
+        update_time = "非資料"
+
+    ustock_info = {
+        'stock_name':stock_name,
+        'com_name':com_name,
+        'com_class':com_class,
+        'listed':listed,
+        'capital':capital,
+        'job':job,
+        'lsy_div':lsy_div,
+        'dividend':dividend,
+        'div_yield':div_yield,
+        'update_time':update_time
+    }
+    return ustock_info
+
 
 # 抓取yahoo_fin股價
 def get_stock_data(stock_no, start_dt, end_dt):
@@ -329,10 +425,14 @@ def plot_stock_kline(data):
 # 呈現五線譜資訊頁面
 def five_line_view(stock_no, start_dt, end_dt):
     if stock_no[-3:]=='.TW':
-        tstock_id = stock_no.split('.')[0]
+        stock_class = 'TW'
+        stock_id = stock_no.split('.')[0]
+        stock_info = get_tstock_info(stock_id)
     else:
-        tstock_id = ""
-    tstock_info = get_tstock_info(tstock_id)
+        stock_class = 'US'
+        stock_id = stock_no
+        stock_info =  get_ustock_info(stock_id)
+    
 
     try:
         # 抓股價
@@ -346,7 +446,7 @@ def five_line_view(stock_no, start_dt, end_dt):
         five_plot_obj = plot_five_line(five_table)
         kline_plot_obj =  plot_stock_kline(stock_price)
 
-        stock_info = {
+        five_line_info = {
             'return_code':"",
             'stock_no':stock_no,
             'end_dt':end_dt,
@@ -363,7 +463,7 @@ def five_line_view(stock_no, start_dt, end_dt):
             'stock_status':stock_status[0]
         }
     except:
-        stock_info = {
+        five_line_info = {
             'return_code':'查無資訊或輸入有誤',
             'stock_no':'',
             'end_dt':'',
@@ -382,6 +482,6 @@ def five_line_view(stock_no, start_dt, end_dt):
         five_plot_obj = None
         kline_plot_obj = None
 
-    return render_template('five_line.html', tstock_id=tstock_id, stock_info=stock_info, tstock_info=tstock_info, five_plot_obj=five_plot_obj, kline_plot_obj=kline_plot_obj)
+    return render_template('five_line.html', stock_class=stock_class, stock_id=stock_id, five_line_info=five_line_info, stock_info=stock_info, five_plot_obj=five_plot_obj, kline_plot_obj=kline_plot_obj)
     
 

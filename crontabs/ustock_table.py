@@ -350,7 +350,94 @@ def ustock_table(ustock_list):
 
   return pd.DataFrame(list(zip( ustock_list, stock_name, price, dividend, yield_, stock_status_l1y, stock_l1y_r2, stock_l1y_slope, stock_l1y_sd,  stock_status_l2y, stock_status_l3y)), columns =['stock_no', 'stock_name', 'price', 'dividend', 'yield_', 'stock_status_l1y', 'stock_l1y_r2', 'stock_l1y_slope', 'stock_l1y_sd', 'stock_status_l2y', 'stock_status_l3y'])
 
+# 計算美股狀態無爬網
+def ustock_table_n(ustock_list):
+  year = datetime.datetime.now().year
+  stock_name = []
+  price = []
+  dividend = []
+  yield_ = []
+  stock_l1y_r2 = []
+  stock_l1y_slope = []
+  stock_l1y_sd = []
 
+  stock_status_l1y = []
+  stock_status_l2y = []
+  stock_status_l3y = []
+
+  end_dt = datetime.datetime.now().strftime("%Y-%m-%d")
+  start_l1y = (datetime.datetime.now() - datetime.timedelta(days=365)).strftime("%Y-%m-%d")
+  start_l2y = (datetime.datetime.now() - datetime.timedelta(days=365*2)).strftime("%Y-%m-%d")
+  start_l3y = (datetime.datetime.now() - datetime.timedelta(days=365*3)).strftime("%Y-%m-%d")
+
+  for index,stock_no in enumerate(ustock_list):
+    print("開始判讀第",index,"個，代號",stock_no)
+    # 獲取 html 資訊
+    try:
+      stock_price = get_stock_data(stock_no, start_l3y, end_dt)
+
+      stock_price_tmp = stock_price[stock_price['date']>start_l1y]
+      five_table_tmp = get_fiveline_table(stock_price_tmp)
+      fiveline_vec_tmp=five_table_tmp[-1:]
+      stock_status_l1y_tmp = assess_status(fiveline_vec_tmp)[0]
+      stock_l1y_r2_tmp = round(fiveline_vec_tmp['rsquared'].values[0],4)
+      stock_l1y_slope_tmp = round(fiveline_vec_tmp['slope'].values[0],4)
+      stock_l1y_sd_tmp = round(fiveline_vec_tmp['sd'].values[0],4)
+
+      stock_price_tmp = stock_price[stock_price['date']>start_l2y]
+      five_table_tmp = get_fiveline_table(stock_price_tmp)
+      fiveline_vec_tmp=five_table_tmp[-1:]
+      stock_status_l2y_tmp = assess_status(fiveline_vec_tmp)[0]
+
+      stock_price_tmp = stock_price[stock_price['date']>start_l3y]
+      five_table_tmp = get_fiveline_table(stock_price_tmp)
+      fiveline_vec_tmp=five_table_tmp[-1:]
+      stock_status_l3y_tmp = assess_status(fiveline_vec_tmp)[0]
+    except:
+      stock_status_l1y_tmp = '無資料，無法觀察。'
+      stock_status_l2y_tmp = '無資料，無法觀察。'
+      stock_status_l3y_tmp = '無資料，無法觀察。'
+      stock_l1y_r2_tmp = None
+      stock_l1y_slope_tmp = None
+      stock_l1y_sd_tmp = None
+
+    # stock_name
+    try:
+      stock_name_tmp = si.get_company_info(stock_no)['Value']['longBusinessSummary'].split('.')[0]
+    except:
+      stock_name_tmp = ""
+    # price
+    try:
+      price_tmp = round(si.get_live_price(stock_no),2)
+    except:
+      price_tmp = 0
+    # dividend
+    try:
+      dividend_tmp = round(sum(si.get_dividends(stock_no)[si.get_dividends(stock_no).index.year == year-1]['dividend']),2)
+    except:
+      dividend_tmp = 0
+    # yield
+    try:
+      yield_tmp = round(dividend_tmp/price_tmp,4)
+    except:
+      yield_tmp = 0
+
+    stock_status_l1y.append(stock_status_l1y_tmp)
+    stock_status_l2y.append(stock_status_l2y_tmp)
+    stock_status_l3y.append(stock_status_l3y_tmp)
+    stock_l1y_r2.append(stock_l1y_r2_tmp)
+    stock_l1y_slope.append(stock_l1y_r2_tmp)
+    stock_l1y_sd.append(stock_l1y_r2_tmp)
+
+    stock_name.append(stock_name_tmp)
+    price.append(price_tmp)
+    dividend.append(dividend_tmp)
+    yield_.append(yield_tmp)
+
+  return pd.DataFrame(list(zip( ustock_list, stock_name, price, dividend, yield_, stock_status_l1y, stock_l1y_r2, stock_l1y_slope, stock_l1y_sd,  stock_status_l2y, stock_status_l3y)), columns =['stock_no', 'stock_name', 'price', 'dividend', 'yield_', 'stock_status_l1y', 'stock_l1y_r2', 'stock_l1y_slope', 'stock_l1y_sd', 'stock_status_l2y', 'stock_status_l3y'])
+
+
+print(datetime.datetime.now(),"排程開始")
 # gather stock symbols from major US exchanges
 df1 = pd.DataFrame( si.tickers_sp500() )
 df2 = pd.DataFrame( si.tickers_nasdaq() )
@@ -371,6 +458,8 @@ my_list = ['W', 'R', 'P', 'Q']
 del_set = set()
 sav_set = set()
 
+print(datetime.datetime.now(),"抓取美股資料")
+
 for symbol in symbols:
     if len( symbol ) > 4 and symbol[-1] in my_list:
         del_set.add( symbol )
@@ -384,19 +473,39 @@ sav_set = list(filter(lambda x: x != "", list(sav_set)))
 print( f'Removed {len( del_set )} unqualified stock symbols...' )
 print( f'There are {len( sav_set )} qualified stock symbols...' )
 
+print(datetime.datetime.now(),"美股資料抓取完成")
+print(datetime.datetime.now(),"開始計算美股資料")
 
-df = ustock_table(sav_set)
-
-df['update_time'] = datetime.datetime.now().strftime('%Y-%m-%d')
-
-
-print(datetime.datetime.now(),"資料表處理完成")
+step = 250
+ustock_loop = [sav_set[i:i+step] for i in range(0,len(sav_set),step)]
 
 engine = create_engine("postgresql://%s:%s@%s:5432/%s" % (pgdb_config['user'],pgdb_config['password'],pgdb_config['host'],pgdb_config['database']))
 
-print(datetime.datetime.now(),"寫入資料庫")
-df.to_sql('ustock_table', engine, if_exists='replace',index=False,method='multi')
 
-df.head()
+for index,tmp_list in enumerate(ustock_loop):
+  print(datetime.datetime.now(),'第',index+1,'Partition 計算，有',len(tmp_list),'筆資料')
+  df = ustock_table_n(tmp_list)
+  df['update_time'] = datetime.datetime.now().strftime('%Y-%m-%d')
+  print(datetime.datetime.now(),"資料表處理完成")
+  print(datetime.datetime.now(),"寫入資料庫")
+  if index==0:
+    df.to_sql('ustock_table_tmp', engine, if_exists='replace',index=False,method='multi')
+  else:
+    df.to_sql('ustock_table_tmp', engine, if_exists='append',index=False,method='multi')
+
+print(datetime.datetime.now(),"Table rename")
+
+sqls = '''ALTER TABLE ustock_table
+RENAME TO ustock_table_old;
+ALTER TABLE ustock_table_tmp
+RENAME TO ustock_table;
+drop table ustock_table_old'''
+
+conn = psycopg2.connect(**pgdb_config)
+cursor = conn.cursor()
+cursor.execute(sqls)
+conn.commit()
+conn.close()
+
 
 print(datetime.datetime.now(),"排程完成")

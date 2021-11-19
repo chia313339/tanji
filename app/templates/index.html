@@ -96,7 +96,29 @@
                 <h2 class="card-title" style="font-weight: bold; color:#00B050;">推薦美股</h2>
               </div>
               <div class="card-body row">
-                建置中
+                {% if recommed_ustock|length > 0 %}
+                  <p style="color: rgb(180, 88, 34);">目前處於低價，且公司規模、獲利、成長穩定的公司。</p>
+                {% else %}
+                  <p style="color: rgb(119, 21, 21);">目前沒有推薦的公司。</p>
+                {% endif %}
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">代號</th>
+                      <th scope="col">公司</th>
+                      <th scope="col">股價</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in recommed_ustock %}
+                    <tr>
+                      <td><a href="https://finance.yahoo.com/quote/{{item[0]}}" target="_blank">{{item[0]}}</a></td>
+                      <td><a href="javascript: void(0)" onclick="fiveline_link('{{item[0]}}',1)">{{item[1]}}</a></td>
+                      <td>{{item[2]}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
 
               
             </div>
