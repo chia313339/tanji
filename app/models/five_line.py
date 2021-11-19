@@ -482,68 +482,6 @@ def five_line_view(stock_no, start_dt, end_dt):
         five_plot_obj = None
         kline_plot_obj = None
 
-    return render_template('five_line.html', stock_class=stock_class, stock_id=stock_id, five_line_info=five_line_info, stock_info=stock_info, five_plot_obj=five_plot_obj, kline_plot_obj=kline_plot_obj, stock_list_stats=stock_list_stats)
-    
-
-# def five_line_view(stock_no, start_dt, end_dt):
-#     if stock_no[-3:]=='.TW':
-#         stock_class = 'TW'
-#         stock_id = stock_no.split('.')[0]
-#         stock_info = get_tstock_info(stock_id)
-#     else:
-#         stock_class = 'US'
-#         stock_id = stock_no
-#         stock_info =  get_ustock_info(stock_id)
-    
-
-#     try:
-#         # 抓股價
-#         stock_price = get_stock_data(stock_no, start_dt, end_dt)
-#         # 五線譜表
-#         five_table = get_fiveline_table(stock_price)
-#         # 衡量現況
-#         fiveline_vec=five_table[-1:]
-#         stock_status = assess_status(fiveline_vec)
-#         # 五線譜圖物件
-#         five_plot_obj = plot_five_line(five_table)
-#         kline_plot_obj =  plot_stock_kline(stock_price)
-
-#         five_line_info = {
-#             'return_code':"",
-#             'stock_no':stock_no,
-#             'end_dt':end_dt,
-#             'start_dt':start_dt,
-#             'r2':round(fiveline_vec['rsquared'],4).values[0],
-#             'slope':round(fiveline_vec['slope'],4).values[0],
-#             'sd':round(fiveline_vec['sd'],4).values[0],
-#             'stock_price':round(fiveline_vec['stock_price'],2).values[0],
-#             'reg_m2sd':round(fiveline_vec['reg-2sd'],2).values[0],
-#             'reg_m1sd':round(fiveline_vec['reg-1sd'],2).values[0],
-#             'reg_line':round(fiveline_vec['reg_line'],2).values[0],
-#             'reg_p1sd':round(fiveline_vec['reg+1sd'],2).values[0],
-#             'reg_p2sd':round(fiveline_vec['reg+2sd'],2).values[0],
-#             'stock_status':stock_status[0]
-#         }
-#     except:
-#         five_line_info = {
-#             'return_code':'查無資訊或輸入有誤',
-#             'stock_no':'',
-#             'end_dt':'',
-#             'start_dt':'',
-#             'r2':'',
-#             'slope':'',
-#             'sd':'',
-#             'stock_price':'',
-#             'reg_m2sd':'',
-#             'reg_m1sd':'',
-#             'reg_line':'',
-#             'reg_p1sd':'',
-#             'reg_p2sd':'',
-#             'stock_status':''
-#         }
-#         five_plot_obj = None
-#         kline_plot_obj = None
-
-#     return render_template('five_line.html', stock_class=stock_class, stock_id=stock_id, five_line_info=five_line_info, stock_info=stock_info, five_plot_obj=five_plot_obj, kline_plot_obj=kline_plot_obj)
+    return render_template('five_line.html', stock_class=stock_class, stock_id=stock_id, five_line_info=five_line_info, stock_info=stock_info, five_plot_obj=five_plot_obj, kline_plot_obj=kline_plot_obj)
     
 
