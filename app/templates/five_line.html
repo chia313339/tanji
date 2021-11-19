@@ -159,6 +159,7 @@
           </div>
         </div>
 
+
         
 
         
@@ -209,11 +210,18 @@
 
 
     $(document).ready(function(){
+
+
       var five_line_plot = echarts.init(document.getElementById('five_line_plot'));
       five_line_plot.setOption({{ five_plot_obj | safe }});
       var stock_kline_plot = echarts.init(document.getElementById('stock_kline_plot'));
       stock_kline_plot.setOption({{ kline_plot_obj | safe }});
+
+      
     });
+
+ 
+
 
 
 

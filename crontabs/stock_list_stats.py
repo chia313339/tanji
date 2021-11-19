@@ -274,15 +274,35 @@ print(datetime.datetime.now(),"計算五線譜")
 df = stock_list_five_line(df)
 
 df['4QEPS']=round(df['今年累積EPS']-(df['1QEPS']+df['2QEPS']+df['3QEPS']),2)
+df['去年EPS達成率']= round(df['今年累積EPS']/df['去年EPS']*100,2)
 
-df = df[['代號','公司','股價','配息','現金殖利率','1QEPS','2QEPS','3QEPS','4QEPS','今年累積EPS','去年EPS','本益比','股價淨值比','five_line_1y','five_line_2y','five_line_3y','除息日','除權日','3年平均股利','6年平均股利','10年股利次數','10年股利次數']]
+if datetime.datetime.today().month in (1,2,3):
+  qua = 1
+  threshold = 25
+elif datetime.datetime.today().month in (4,5,6):
+  qua = 2
+  threshold = 65
+elif datetime.datetime.today().month in (7,8,9):
+  qua = 3
+  threshold = 85
+else:
+  qua = 4
+  threshold = 100
+
+df['獲利表現佳'] = df['去年EPS達成率'] > threshold
+
+
+df = df[['代號', '公司', '股價', '配息', '配股', '現金殖利率', '殖利率',
+       '配息率', '3年平均股利', '6年平均股利', '10年平均股利', '10年股利次數', '1QEPS',
+       '2QEPS', '3QEPS', '4QEPS', '今年累積EPS', '去年EPS', '去年EPS達成率', '獲利表現佳', '本益比', '股價淨值比', 'five_line_1y', 'five_line_2y', 'five_line_3y', '除息日', '除權日', '發息日', '董監持股', '多少張以上要繳健保費',
+       '一張繳健保費']]
+
+df.columns = ['stock_no', 'stock_name', 'price', 'dividend', 'dividend_st', 'yield_ch', 'yield',
+       'dividend_p', 'l3y_div_avg', 'l6y_div_avg', 'l10y_div_avg', 'l10y_div_cnt', 'q1eps',
+       'q2eps', 'q3eps', 'q4eps', 'acc_eps', 'l1y_eps', 'eps_goal', 'eps_eva', 'per', 'pbr', 'five_line_1y', 'five_line_2y', 'five_line_3y', 'ex_div_dt', 'record_dt', 'pay_dt', 'hd', 'sh_num','sh_pay']
 
 df['update_time'] = datetime.datetime.now().strftime('%Y-%m-%d')
 
-df.columns = ['stock_no', 'stock_name', 'price', 'dividend', 'yield', 'q1eps', 'q2eps', 'q3eps', 'q4eps',
-       'acc_eps', 'l1y_eps', 'per', 'pbr', 'five_line_1y', 'five_line_2y',
-       'five_line_3y', 'ex_div_dt', 'record_dt', 'l3y_div_avg', 'l6y_div_avg', 'l10y_div_avg', 'l10y_div_cnt',
-       'update_time']
 
 print(datetime.datetime.now(),"重組欄位")
 

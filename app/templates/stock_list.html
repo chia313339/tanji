@@ -49,24 +49,33 @@
                     <th>名稱</th>
                     <th>價格</th>
                     <th>配息</th>
+                    <th>配股</th>
                     <th>現金殖利率</th>
+                    <th>殖利率</th>
+                    <th>配息率</th>
+                    <th>3年平均股利</th>
+                    <th>6年平均股利</th>
+                    <th>10年平均股利</th>
+                    <th>10年配息次數</th>
                     <th>Q1EPS</th>
                     <th>Q2EPS</th>
                     <th>Q3EPS</th>
                     <th>Q4EPS</th>
                     <th>今年累積EPS</th>
                     <th>去年EPS</th>
+                    <th>去年EPS達成率</th>
+                    <th>獲利表現佳</th>
                     <th>本益比</th>
                     <th>股價淨值比</th>
                     <th>近1年價位</th>
                     <th>近2年價位</th>
                     <th>近3年價位</th>
-                    <th>配息日</th>
+                    <th>除息日</th>
                     <th>除權日</th>
-                    <th>3年平均股利</th>
-                    <th>6年平均股利</th>
-                    <th>10年平均股利</th>
-                    <th>10年配息次數</th>
+                    <th>發息日</th>
+                    <th>董監持股</th>
+                    <th>多少張以上要繳健保費</th>
+                    <th>一張繳健保費</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -85,15 +94,24 @@
                     <td>{{item[10]}}</td>
                     <td>{{item[11]}}</td>
                     <td>{{item[12]}}</td>
-                    <td><a href="javascript: void(0)" onclick="fiveline_link('{{item[0]}}.TW',1)">{{item[13]}}</a></td>
-                    <td><a href="javascript: void(0)" onclick="fiveline_link('{{item[0]}}.TW',2)">{{item[14]}}</a></td>
-                    <td><a href="javascript: void(0)" onclick="fiveline_link('{{item[0]}}.TW',3)">{{item[15]}}</a></td>
+                    <td>{{item[13]}}</td>
+                    <td>{{item[14]}}</td>
+                    <td>{{item[15]}}</td>
                     <td>{{item[16]}}</td>
                     <td>{{item[17]}}</td>
                     <td>{{item[18]}}</td>
                     <td>{{item[19]}}</td>
                     <td>{{item[20]}}</td>
-                    <td>{{item[21]}}</td>  
+                    <td>{{item[21]}}</td> 
+                    <td><a href="javascript: void(0)" onclick="fiveline_link('{{item[0]}}.TW',1)">{{item[22]}}</a></td>  
+                    <td><a href="javascript: void(0)" onclick="fiveline_link('{{item[0]}}.TW',2)">{{item[23]}}</a></td>  
+                    <td><a href="javascript: void(0)" onclick="fiveline_link('{{item[0]}}.TW',3)">{{item[24]}}</a></td>  
+                    <td>{{item[25]}}</td>  
+                    <td>{{item[26]}}</td>  
+                    <td>{{item[27]}}</td>  
+                    <td>{{item[28]}}</td>  
+                    <td>{{item[29]}}</td>  
+                    <td>{{item[30]}}</td>  
                   </tr>
                   {% endfor %}
                 </tbody>

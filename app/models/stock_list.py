@@ -34,9 +34,12 @@ def sql_to_df(pgdb_config,sqls):
 
 
 def get_stock_list_csv():
-    sqls = '''SELECT stock_no, stock_name, price, dividend, yield, q1eps, q2eps, q3eps, q4eps, acc_eps, l1y_eps, per, pbr, five_line_1y, five_line_2y, five_line_3y, ex_div_dt, record_dt, l3y_div_avg, l6y_div_avg, l10y_div_avg, l10y_div_cnt, update_time FROM public.stock_list_stats'''
+    sqls = '''SELECT stock_no, stock_name, price, ROUND( dividend::numeric, 2 ) as dividend, dividend_st, yield_ch, yield, dividend_p, l3y_div_avg, l6y_div_avg, l10y_div_avg, l10y_div_cnt, q1eps, q2eps, q3eps, q4eps, acc_eps, l1y_eps, eps_goal, eps_eva, per, pbr, five_line_1y, five_line_2y, five_line_3y, ex_div_dt, record_dt, pay_dt, hd, sh_num, sh_pay, update_time FROM public.stock_list_stats'''
     df = sql_to_df(pgdb_config,sqls)
-    df.columns = ['代號',	'名稱',	'價格',	'配息',	'現金殖利率',	'Q1EPS',	'Q2EPS',	'Q3EPS',	'Q4EPS',	'今年累積EPS',	'去年EPS',	'本益比',	'股價淨值比',	'近1年價位',	'近2年價位',	'近3年價位',	'配息日',	'除權日',	'3年平均股利',	'6年平均股利',	'10年平均股利',	'10年配息次數',	'update_time']
+    df.columns = ['代號', '公司', '股價', '配息', '配股', '現金殖利率', '殖利率',
+       '配息率', '3年平均股利', '6年平均股利', '10年平均股利', '10年股利次數', '1QEPS',
+       '2QEPS', '3QEPS', '4QEPS', '今年累積EPS', '去年EPS', '去年EPS達成率', '獲利表現佳', '本益比', '股價淨值比', 'five_line_1y', 'five_line_2y', 'five_line_3y', '除息日', '除權日', '發息日', '董監持股', '多少張以上要繳健保費',
+       '一張繳健保費','update_time']
     resp = make_response(df.to_csv(encoding='utf-8', index=False))
     resp.headers["Content-Disposition"] = "attachment; filename=stock.csv"
     resp.headers["Content-Type"] = "text/csv"
