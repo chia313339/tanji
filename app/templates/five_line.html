@@ -120,11 +120,20 @@
               <b>評估建議：</b><br>
               <p style="color: tomato;">{{five_line_info.stock_status}}</p>
             </div>
+            {% if stock_class == 'TW' %}
             <div class="col-md-6">
               <a href="https://tw.stock.yahoo.com/quote/{{stock_id}}.TW" target="_blank"><button type="button" class="btn btn-warning">Yahoo 股票</button></a>&nbsp;
               <a href="https://goodinfo.tw/StockInfo/StockDetail.asp?STOCK_ID={{stock_id}}" target="_blank"><button type="button" class="btn btn-secondary">Goodinfo!</button></a>&nbsp;
               <a href="https://www.cmoney.tw/finance/f00025.aspx?s={{stock_id}}" target="_blank"><button type="button" class="btn btn-info">Cmoney</button></a>&nbsp;
             </div>
+            {% else %}
+            <div class="col-md-6">
+              <a href="https://finance.yahoo.com/quote/{{stock_id}}" target="_blank"><button type="button" class="btn btn-warning">Yahoo 股票</button></a>&nbsp;
+              <a href="http://www.aastocks.com/tc/usq/quote/quote.aspx?symbol={{stock_id}}" target="_blank"><button type="button" class="btn btn-secondary">阿斯達克</button></a>&nbsp;
+              <a href="https://invest.cnyes.com/usstock/detail/{{stock_id}}" target="_blank"><button type="button" class="btn btn-info">鉅亨網</button></a>&nbsp;
+            </div>
+            {% endif %}
+            
             
           </div>
           
