@@ -8,7 +8,7 @@ import datetime
 
 # 正式環境DB
 pgdb_config={
-'host':'35.194.216.83',
+'host':'130.211.245.233',
 'port':5432,
 'user':'tanji',
 'password':'tanji',

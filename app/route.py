@@ -27,7 +27,7 @@ def index():
     recommed_tstock = get_data_from_pgdb(pgdb_config,sqls)
     sp = "('"+"','".join(tickers_sp500())+"')"
     sqls2 = '''SELECT stock_no, stock_name, price, dividend, yield_, stock_status_l1y, stock_l1y_r2, stock_l1y_slope, stock_l1y_sd, stock_status_l2y, stock_status_l3y, update_time FROM public.ustock_table where stock_l1y_slope > 0.5 and stock_l1y_r2 > 0.7 and (stock_status_l2y like '%絕對低點%' or stock_status_l2y like '%標準差之外相對低點%' or stock_status_l1y like '%絕對低點%' or  stock_status_l1y like '%標準差之外相對低點%') and stock_no in '''
-    sqls2 = sqls2 + sp + "order by stock_l1y_slope desc"
+    sqls2 = sqls2 + sp + "group by stock_no, stock_name, price, dividend, yield_, stock_status_l1y, stock_l1y_r2, stock_l1y_slope, stock_l1y_sd, stock_status_l2y, stock_status_l3y, update_time order by stock_l1y_slope desc"
     recommed_ustock = get_data_from_pgdb(pgdb_config,sqls2)
     return render_template('index.html', recommed_tstock=recommed_tstock,recommed_ustock=recommed_ustock)
 
