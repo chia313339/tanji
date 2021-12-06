@@ -476,6 +476,8 @@ print( f'There are {len( sav_set )} qualified stock symbols...' )
 print(datetime.datetime.now(),"美股資料抓取完成")
 print(datetime.datetime.now(),"開始計算美股資料")
 
+sav_set = list(set(sav_set))
+
 step = 250
 ustock_loop = [sav_set[i:i+step] for i in range(0,len(sav_set),step)]
 
