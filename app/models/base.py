@@ -8,8 +8,8 @@ import datetime
 
 # 正式環境DB
 pgdb_config={
-'host':'130.211.245.233',
-'port':5432,
+'host':'tanji.synology.me',
+'port':5430,
 'user':'tanji',
 'password':'tanji',
 'database':'tanji',
